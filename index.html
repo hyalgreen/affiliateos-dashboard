@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AffiliateOS Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Top Navigation -->
+  <nav class="bg-blue-600 p-4 text-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold">AffiliateOS</h1>
+      <ul class="flex space-x-6">
+        <li><a href="#" class="hover:underline">Dashboard</a></li>
+        <li><a href="#" class="hover:underline">Campaigns</a></li>
+        <li><a href="#" class="hover:underline">Analytics</a></li>
+        <li><a href="#" class="hover:underline">Accounts</a></li>
+        <li><a href="#" class="hover:underline">Landing Pages</a></li>
+        <li><a href="#" class="hover:underline">Integrations</a></li>
+        <li><a href="#" class="hover:underline">Settings</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Campaign Select & Filters -->
+  <header class="container mx-auto mt-8">
+    <h2 class="text-3xl font-bold mb-2">Affiliate Management Overview</h2>
+    <p class="text-gray-700 mb-4">Select a campaign and view real-time performance metrics below.</p>
+
+    <!-- Campaign Dropdown -->
+    <div class="bg-white rounded-md shadow p-4 w-full md:w-1/2">
+      <label for="campaignSelect" class="block text-gray-700 font-semibold mb-2">Select Campaign:</label>
+      <select id="campaignSelect" class="w-full p-2 border rounded-md">
+        <option value="campaign1">Campaign Alpha</option>
+        <option value="campaign2">Campaign Beta</option>
+        <option value="campaign3">Campaign Gamma</option>
+      </select>
+      <div id="campaignStatus" class="mt-4 text-sm font-medium px-3 py-1 inline-block rounded-full bg-green-100 text-green-800">
+        Status: Active
+      </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="bg-white rounded-md shadow p-4 w-full md:w-1/2 mt-4 flex flex-col md:flex-row gap-4 items-center">
+      <div class="flex flex-col w-full">
+        <label for="startDate" class="text-gray-700 font-semibold mb-1">Start Date:</label>
+        <input type="date" id="startDate" class="p-2 border rounded-md w-full">
+      </div>
+      <div class="flex flex-col w-full">
+        <label for="endDate" class="text-gray-700 font-semibold mb-1">End Date:</label>
+        <input type="date" id="endDate" class="p-2 border rounded-md w-full">
+      </div>
+      <button id="applyDateFilter" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Apply</button>
+    </div>
+  </header>
+
+  <!-- Dashboard Charts -->
+  <section class="container mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-bold mb-4">Real-Time Conversions</h3>
+      <canvas id="conversionsChart" width="400" height="200"></canvas>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-bold mb-4">Traffic Sources</h3>
+      <canvas id="trafficChart" width="400" height="200"></canvas>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-bold mb-4">Revenue Trends</h3>
+      <canvas id="revenueChart" width="400" height="200"></canvas>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="container mx-auto mt-16 py-8 text-center text-gray-500">
+    &copy; 2025 AffiliateOS. All rights reserved.
+  </footer>
+
+  <!-- Charts Script -->
+  <script>
+    const campaignData = {
+      campaign1: {
+        status: "active",
+        conversions: [120, 190, 300, 500, 200, 300, 450],
+        traffic: [40, 25, 20, 15],
+        revenue: [1200, 1900, 1700, 2500]
+      },
+      campaign2: {
+        status: "paused",
+        conversions: [80, 150, 180, 400, 250, 320, 500],
+        traffic: [30, 35, 25, 10],
+        revenue: [1000, 1600, 1800, 2300]
+      },
+      campaign3: {
+        status: "warning",
+        conversions: [60, 130, 140, 300, 150, 200, 350],
+        traffic: [20, 40, 30, 10],
+        revenue: [800, 1400, 1300, 2100]
+      }
+    };
+
+    const conversionsChart = new Chart(document.getElementById('conversionsChart'), {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Conversions',
+          data: [],
+          backgroundColor: 'rgba(59,130,246,0.2)',
+          borderColor: 'rgba(59,130,246,1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    const trafficChart = new Chart(document.getElementById('trafficChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Facebook', 'Google', 'TikTok', 'Bing'],
+        datasets: [{
+          data: [],
+          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    const revenueChart = new Chart(document.getElementById('revenueChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Revenue ($)',
+          data: [],
+          backgroundColor: 'rgba(16, 185, 129, 0.8)'
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    function updateCharts(data) {
+      conversionsChart.data.datasets[0].data = data.conversions;
+      trafficChart.data.datasets[0].data = data.traffic;
+      revenueChart.data.datasets[0].data = data.revenue;
+
+      conversionsChart.update();
+      trafficChart.update();
+      revenueChart.update();
+    }
+
+    function updateStatus(status) {
+      const statusEl = document.getElementById('campaignStatus');
+      statusEl.textContent = `Status: ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+      statusEl.className = "mt-4 text-sm font-medium px-3 py-1 inline-block rounded-full";
+
+      if (status === 'active') {
+        statusEl.classList.add('bg-green-100', 'text-green-800');
+      } else if (status === 'paused') {
+        statusEl.classList.add('bg-yellow-100', 'text-yellow-800');
+      } else if (status === 'warning') {
+        statusEl.classList.add('bg-red-100', 'text-red-800');
+      } else {
+        statusEl.classList.add('bg-gray-100', 'text-gray-800');
+      }
+    }
+
+    function loadCampaign(campaignId) {
+      const data = campaignData[campaignId];
+      updateCharts(data);
+      updateStatus(data.status);
+    }
+
+    document.getElementById('campaignSelect').addEventListener('change', function () {
+      loadCampaign(this.value);
+    });
+
+    document.getElementById('applyDateFilter').addEventListener('click', function () {
+      const campaignId = document.getElementById('campaignSelect').value;
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+
+      if (!start || !end) {
+        alert("Please select both start and end dates.");
+        return;
+      }
+
+      // Simulated filter — in production this would fetch filtered data from backend
+      loadCampaign(campaignId);
+    });
+
+    // Load default campaign on startup
+    loadCampaign('campaign1');
+  </script>
+</body>
+</html>
